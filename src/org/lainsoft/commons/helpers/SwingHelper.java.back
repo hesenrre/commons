@@ -1,0 +1,256 @@
+package org.lainsoft.commons.helpers;
+
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Vector;
+import javax.swing.Action;
+import javax.swing.ComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JPasswordField;
+import javax.swing.Icon;
+import javax.swing.text.Document;
+import java.awt.event.ActionListener;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import static javax.swing.SwingConstants.*;
+
+public class SwingHelper{
+        
+    
+    public static JButton
+    generateButtonFor(Object... objs){
+        Container c = search(objs, Container.class);        
+        String []name_value = search(objs,String[].class);
+        String value = (name_value == null || name_value.length < 2 ? (String)search(objs, String.class) : name_value[1]);
+        Action action = search(objs,Action.class);
+        Icon icon = search(objs,Icon.class);
+        ActionListener listener = search(objs,ActionListener.class);
+        Color color = search(objs,Color.class);
+        Dimension dimension = search(objs, Dimension.class);
+        Font font = search(objs, Font.class);
+        JButton button = action == null ? createButton(value,icon) : createButton(action);
+        button.addActionListener(listener);
+        button.setName(name_value == null ? "" : name_value[0]);
+        if (color != null) button.setBackground(color);
+        button.setPreferredSize(dimension);
+        button.setFont(font);
+        addToContainer(c,button);
+        return button;
+    }
+
+    public static JLabel
+    generateLabelFor(Object... objs){
+        Container c = search(objs, Container.class);
+        String []name_value = search(objs,String[].class);
+        String value = (name_value == null || name_value.length < 2 ? (String)search(objs, String.class) : name_value[1]);
+        Integer align = search(objs,Integer.class);
+        Icon icon = search(objs,Icon.class);
+        Color color = search(objs,Color.class);
+        Font font = search(objs,Font.class);
+        JLabel label = createLabel(value, (align == null? CENTER : align.intValue()), icon);
+        label.setName(name_value == null ? "" : name_value[0]);
+        label.setFont(font);
+        label.setForeground(color);
+        addToContainer(c, label);        
+        return label;
+    }    
+
+    public static JComboBox
+    generateComboBoxFor(Object... objs){
+        Container c = search(objs, Container.class);
+        ComboBoxModel model = null;
+        Vector items = null;
+        Object[] itms = null;
+        String name = search(objs,String.class);
+        JComboBox combo = 
+            (model = search(objs, ComboBoxModel.class)) == null 
+            ? (items = search(objs, Vector.class)) == null 
+              ? new JComboBox(itms = search(objs, Object[].class)) 
+              : new JComboBox(items) 
+            : new JComboBox(model);
+        combo.setName(name);
+        addToContainer(c,combo);
+        return combo;
+    }
+
+
+    public static JTextField
+    generateTextFieldFor(Object... objs){
+        Container c = search(objs, Container.class);
+        Document doc = search(objs, Document.class);
+        String []name_value = search(objs,String[].class);
+        String value = (name_value == null || name_value.length < 2 ? (String)search(objs, String.class) : name_value[1]);
+        int []colums_align = search(objs, int[].class);
+        Integer colums = 
+            (colums_align == null || colums_align.length < 2 ? (Integer)search(objs, Integer.class) : new Integer(colums_align[1]));
+        Color background = search(objs, Color.class);
+        Boolean editable = search(objs, Boolean.class);
+        Font font = search(objs,Font.class);
+        Dimension dimension = search(objs, Dimension.class);
+        JTextField textfield = new JTextField(doc,value,colums == null ? 0 : colums.intValue());
+        textfield.setName(name_value == null ? "" : name_value[0]);        
+        textfield.setBackground(background);
+        textfield.setEditable(editable == null ? true : editable.booleanValue());
+        textfield.setHorizontalAlignment(colums_align == null ? LEFT : colums_align[0]);
+        textfield.setFont(font);
+        textfield.setPreferredSize(dimension);
+        addToContainer(c, textfield);
+        return textfield;
+    }
+
+
+    public static JPasswordField
+    generatePasswordFieldFor(Object... objs){
+        Container c = search(objs, Container.class);
+        Document doc = search(objs, Document.class);
+        String []name_value = search(objs,String[].class);
+        String value = (name_value == null || name_value.length < 2 ? (String)search(objs, String.class) : name_value[1]);
+        int []colums_align = search(objs, int[].class);
+        Integer colums = 
+            (colums_align == null || colums_align.length < 2 ? (Integer)search(objs, Integer.class) : new Integer(colums_align[1]));
+        Color background = search(objs, Color.class);
+        Boolean editable = search(objs, Boolean.class);
+        Font font = search(objs,Font.class);
+        Dimension dimension = search(objs, Dimension.class);
+        JPasswordField passfield = 
+            new JPasswordField(doc,value,colums == null ? 0 : colums.intValue());
+        passfield.setName(name_value == null ? "" : name_value[0]);        
+        passfield.setBackground(background);
+        passfield.setEditable(editable == null ? true : editable.booleanValue());
+        passfield.setHorizontalAlignment(colums_align == null ? LEFT : colums_align[0]);
+        passfield.setFont(font);
+        passfield.setPreferredSize(dimension);
+        addToContainer(c, passfield);
+        return passfield;
+    }
+
+
+
+    public static List<JButton>
+    getListenedButtonsFor(Container c){
+        List <JButton> filter = null;
+        List <JButton> result = new ArrayList<JButton>();
+        searchFor(c, JButton.class, filter = new ArrayList<JButton>(), null);
+        for (JButton button :filter){
+            if (button.getActionListeners().length > 0){
+                result.add(button);
+            }
+        }
+        return result;
+    }
+
+    public static JTextField
+    getTextField(String name, Container c){
+        List <JTextField> filter = new ArrayList<JTextField>();
+        searchFor(c,JTextField.class, filter, name);
+        return filter.isEmpty() ? null : filter.get(0);
+    }
+        
+
+    public static <T extends Component> T
+    search(String name, Container c){        
+        for (Component comp : c.getComponents()){
+            if(name.equals(comp.getName())){
+                return (T)comp;
+            }else if (comp instanceof Container){
+                search (name, (Container)comp);
+            }
+        }
+        return null;
+    }
+
+//     public static <T extends Component> T
+//     search(String name, Component comp){
+//         if (name.equals(comp.getName())){
+//             return (T)comp;
+//         }else if(comp instanceof Container){
+//             for(Component c : ((Container) comp).getComponents())
+//                 if ((c = search(name, c)) != null) return (T)c;
+//         }
+//         return null;
+//     }
+    
+    public static Map<String,String>
+    params(String name, Container c){
+        List <JTextField> text_filter = new ArrayList<JTextField>();
+        List <JComboBox> box_filter = new ArrayList<JComboBox>();
+        Map <String, String>params = new HashMap<String,String>();
+        searchFor(c, JTextField.class, text_filter, "^("+name+")\\[.*");
+        for (JTextField text : text_filter){
+            String comp_name = text.getName();
+            params.put(comp_name.substring(comp_name.indexOf("[")+1,comp_name.lastIndexOf("]")), text.getText());
+        }
+        searchFor(c, JComboBox.class, box_filter, "^("+name+")\\[.*");
+        for (JComboBox box :box_filter){
+            String comp_name = box.getName();
+            params.put(comp_name.substring(comp_name.indexOf("[")+1,comp_name.lastIndexOf("]")), box.getSelectedItem()== null ? "" :box.getSelectedItem().toString());
+        }
+        
+        return params;
+    }
+    
+    public static String
+    param(String name, Container c){
+        List <JTextField> filter = new ArrayList<JTextField>();
+        searchFor(c, JTextField.class, filter, name.replaceAll("\\[", "\\[").replaceAll("\\]","\\]"));
+        return filter.isEmpty() ? null : filter.get(0).getText();
+    }
+    
+    private static void
+    searchFor(Container c, Class cls, List list, String name){
+        for (Component comp : c.getComponents()){            
+            if (cls.isInstance(comp) && (name == null ? true : comp.getName().matches(name))){
+                list.add(comp);
+            }else if(comp instanceof Container){
+                searchFor((Container)comp, cls, list, name);
+            }
+        }
+    }    
+
+    private static JLabel
+    createLabel(String text, int align, Icon icon){
+        return new JLabel(text,icon,align);        
+    }
+
+    private static JButton
+    createButton(String text, Icon icon){
+        return new JButton(text, icon);
+    }
+    
+    private static JButton
+    createButton(Action action){
+        return new JButton(action);
+    }
+
+
+    private static void
+    addToContainer(Container c, Component element){        
+        if (c == null) return;
+        c.add(element);
+    }
+
+    private static <T> T
+    search(Object[] objs, Class c){
+        for (Object o: objs){
+            if (c.isInstance(o))                
+                return (T)o;
+        }
+        return null;
+    }
+    
+    public static boolean
+    isEmpty(Object o){
+        return o == null || (o instanceof String && o.toString().trim().equals(""));
+    }
+   
+
+}

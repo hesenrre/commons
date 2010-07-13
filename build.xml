@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="commons" default="all" basedir=".">
+        
+        <property environment="env"/>
+        <property name="src.dir" value="src"/>
+        <property name="bin.dir" value="bin"/>
+        <property name="jars.dir" value="lib"/>
+        <property name="doc.dir" value="docs"/>
+        <property name="dist.dir" value="distribution"/>
+
+        <target name="prepare_classpath">
+                <path id="jars.path">
+                        <fileset dir="${jars.dir}">
+                                <include name="**/*.jar"/>
+                        </fileset>
+                </path>
+                <property refid="jars.path" name="classpath"/>
+        </target>
+
+        <target name="compile" depends="prepare_classpath">
+                <mkdir dir="${bin.dir}"/>
+                <javac verbose="false"
+                       deprecation="on"
+                       debug="on"
+                       debugLevel="lines,source"
+                       destdir="${bin.dir}"
+                       classpath="${env.CLASSPATH}:${classpath}"
+                       srcdir="${src.dir}">
+                </javac>
+        </target>
+
+        <target name="docs" depends="prepare_classpath">
+             <mkdir dir="${doc.dir}"/>
+             <javadoc package="true" 
+                      destdir="${doc.dir}" 
+                      classpath="${classpath}" 
+                      private="false" 
+                      windowtitle="Commons Project" 
+                      version="true">
+                <fileset dir="${src.dir}/org">
+                  <exclude name="**/test/**"/>
+                  <include name="**/*.java"/>
+                </fileset>
+             </javadoc>
+          </target>
+
+         <target name="bin_dist" depends="compile">
+            <mkdir dir="${dist.dir}"/>
+            <jar destfile="${dist.dir}/lainsoft-commons-bin.jar">
+              <fileset dir="${bin.dir}">
+                  <exclude name="**/test/**"/>
+              </fileset>
+            </jar>
+          </target>
+
+        
+          <target name="src_dist">
+            <mkdir dir="${dist.dir}"/>
+            <tar destfile="${dist.dir}/lainsoft-commons-src.tar.bz2"
+                 compression="bzip2">     
+              <tarfileset dir="${basedir}"
+                      preserveLeadingSlashes="true"
+                      prefix="lainsoft_commons">
+                <exclude name="**/test/**"/>
+                <include name="${src.dir}/**"/>
+                <include name="${conf.dir}/**"/>
+                <include name="README"/>
+                <include name="Artistic"/>
+                <include name="COPYING"/>
+                <include name="Install"/>
+                <include name="build.xml"/>
+              </tarfileset>
+            </tar>
+          </target>
+
+          <target name="run" depends="compile">
+                <java classname="${env.CLS}"
+                      classpath="${env.CLASSPATH}:${classpath}:${bin.dir}"
+                      fork="true" 
+                      failonerror="true">
+               </java>
+          </target>        
+
+        <target name="all" depends="bin_dist, docs">
+        </target>
+</project>

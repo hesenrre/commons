@@ -1,0 +1,36 @@
+Lainsoft Commons
+==============
+
+version 0.1
+2006-mar-03
+
+
+Compiling
+-----------------
+
+To compile, generate documentation, and the bin jar you will need
+apache-ant (soon apache-maven), which you can obtain from http://ant.apache.org/, 
+then in the base path of the project just type:
+
+$ ant
+
+In the case you just want to compile the source files just type:
+
+$ ant compile
+
+Generating javadoc:
+
+$ ant docs
+
+Create bin jar:
+
+$ ant bin_dist
+
+And finally generate source tar.bzip2 
+
+$ ant src_dist
+
+
+Repository
+---------------
+http://darcs.lainsoft.org/browse?r=commons;a=summary
