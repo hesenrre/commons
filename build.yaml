@@ -1,0 +1,6 @@
+artifacts:
+  io: commons-io:commons-io:jar:1.4
+  lang: commons-lang:commons-lang:jar:2.4
+  logging: commons-logging:commons-logging:jar:1.0.4
+  jcifs: org.samba.jcifs:jcifs:jar:1.2.19
+  jcalendar: com.toedter:jcalendar:jar:1.3.2
